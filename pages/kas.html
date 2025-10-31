@@ -1,21 +1,70 @@
-<div class="section-title"><h2>Kas & Keuangan</h2><div style="display:flex;gap:8px"><button class="btn" id="btnIn">+ Kas Masuk</button><button class="btn" id="btnOut">- Kas Keluar</button></div></div>
-<div class="glass card"><div class="form-row"><label>Tanggal<input id="kTanggal" type="date"></label><label>Nominal<input id="kNominal" type="number" min="0"></label><label>Keterangan<input id="kKet"></label></div></div>
-<div id="kList" class="glass card" style="margin-top:12px;overflow:auto"><table class="table" id="kTable"><thead><tr><th>Tanggal</th><th>Jenis</th><th>Nominal</th><th>Keterangan</th></tr></thead><tbody></tbody></table></div>
+<div class="section-title"><h2>Kas & Keuangan</h2>
+  <div style="display:flex;gap:8px">
+    <button class="btn" id="btnIn">+ Kas Masuk</button>
+    <button class="btn" id="btnOut">- Kas Keluar</button>
+  </div>
+</div>
+<div class="glass card">
+  <div class="form-row">
+    <label>Tanggal<input id="kTanggal" type="date"></label>
+    <label>Nominal<input id="kNominal" type="number" min="0"></label>
+    <label>Keterangan<input id="kKet"></label>
+  </div>
+</div>
+<div id="kList" class="glass card" style="margin-top:12px;overflow:auto">
+  <table class="table" id="kTable">
+    <thead><tr><th>Tanggal</th><th>Jenis</th><th>Nominal</th><th>Keterangan</th><th>Aksi</th></tr></thead>
+    <tbody></tbody>
+  </table>
+</div>
 <script>
 async function boot_kas(){
+  function canManage(){ return ['admin_super','admin_bendahara','admin_ketua'].includes(window.CURRENT_ROLE); }
   async function render(){
     const arr=await API.list('kas',200);
     const tbody=document.querySelector('#kTable tbody');
-    tbody.innerHTML = arr.map(x=>`<tr><td>${(x.tanggal||'').toString().slice(0,10)}</td><td>${x.jenis||'-'}</td><td>${toIDR(x.nominal||0)}</td><td>${x.keterangan||''}</td></tr>`).join('') || "<tr><td colspan='4'>Belum ada data.</td></tr>";
+    tbody.innerHTML = arr.map(x=>{
+      const btns = canManage() ? `<button class='btn' data-edit='${x.id}'>Edit</button> <button class='btn' data-del='${x.id}'>Hapus</button>` : '';
+      return `<tr>
+        <td>${(x.tanggal||'').toString().slice(0,10)}</td>
+        <td>${x.jenis||'-'}</td>
+        <td>${toIDR(x.nominal||0)}</td>
+        <td>${x.keterangan||''}</td>
+        <td>${btns}</td>
+      </tr>`;
+    }).join('') || "<tr><td colspan='5'>Belum ada data.</td></tr>";
+
+    // Delete
+    tbody.querySelectorAll("[data-del]").forEach(b=>{
+      b.onclick = async ()=>{
+        const id = b.getAttribute('data-del');
+        if(confirm('Hapus transaksi ini?')){ await API.del('kas', id); render(); }
+      };
+    });
+    // Edit
+    tbody.querySelectorAll("[data-edit]").forEach(b=>{
+      b.onclick = async ()=>{
+        const id = b.getAttribute('data-edit');
+        const jenis = prompt('Jenis (masuk/keluar):','masuk') || 'masuk';
+        const nominal = parseInt(prompt('Nominal (angka):','0')||'0',10);
+        const keterangan = prompt('Keterangan:') || '';
+        await API.update('kas', id, { jenis, nominal, keterangan });
+        render();
+      };
+    });
   }
-  render();
   document.getElementById('btnIn').onclick=async()=>{
-    const tanggal=document.getElementById('kTanggal').value; const nominal=+document.getElementById('kNominal').value; const keterangan=document.getElementById('kKet').value;
+    const tanggal=document.getElementById('kTanggal').value;
+    const nominal=+document.getElementById('kNominal').value;
+    const keterangan=document.getElementById('kKet').value;
     await API.add('kas',{tanggal,nominal,jenis:'masuk',keterangan}); render();
   };
   document.getElementById('btnOut').onclick=async()=>{
-    const tanggal=document.getElementById('kTanggal').value; const nominal=+document.getElementById('kNominal').value; const keterangan=document.getElementById('kKet').value;
+    const tanggal=document.getElementById('kTanggal').value;
+    const nominal=+document.getElementById('kNominal').value;
+    const keterangan=document.getElementById('kKet').value;
     await API.add('kas',{tanggal,nominal,jenis:'keluar',keterangan}); render();
   };
+  render();
 }
 </script>

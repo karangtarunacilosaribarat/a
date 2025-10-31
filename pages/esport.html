@@ -1,20 +1,52 @@
 <div class="section-title"><h2>Tim Esport</h2><button class="btn" id="btnAddTeam">+ Buat Tim</button></div>
-<div class="glass card"><div class="form-row">
-  <label>Nama Tim<input id="tNama"></label>
-  <label>Game
-    <select id="tGame"><option>MLBB</option><option>PUBG</option><option>Free Fire</option><option>Valorant</option><option>eFootball</option></select>
-  </select></label>
-  <label>Logo Tim<input id="tLogo" type="file" accept="image/*"></label>
-</div></div>
+<div class="glass card">
+  <div class="form-row">
+    <label>Nama Tim<input id="tNama"></label>
+    <label>Game
+      <select id="tGame"><option>MLBB</option><option>PUBG</option><option>Free Fire</option><option>Valorant</option><option>eFootball</option></select>
+    </label>
+    <label>Logo Tim<input id="tLogo" type="file" accept="image/*"></label>
+  </div>
+</div>
 <div id="tList" class="grid" style="margin-top:12px"></div>
 <script>
 async function boot_esport(){
+  function canManage(x){
+    const owner = x.ownerUid && x.ownerUid === window.CURRENT_UID;
+    const admin = ['admin_super','admin_esport','admin_ketua','admin_bidang'].includes(window.CURRENT_ROLE);
+    return owner || admin;
+  }
   async function render(){
     const arr=await API.list('esport',100);
     const root=document.getElementById('tList');
-    root.innerHTML = arr.map(x=>`<div class="glass card"><span class="badge">${x.game||'-'}</span><h3>${x.namaTim||'-'}</h3></div>`).join('') || "<div class='glass card'>Belum ada tim.</div>";
+    root.innerHTML = arr.map(x=>{
+      const btns = canManage(x) ? `<div style="display:flex;gap:8px;margin-top:8px">
+        <button class="btn" data-edit="${x.id}">Edit</button>
+        <button class="btn" data-del="${x.id}">Hapus</button>
+      </div>` : '';
+      return `<div class="glass card">
+        <span class="badge">${x.game||'-'}</span>
+        <h3>${x.namaTim||'-'}</h3>
+        ${btns}
+      </div>`;
+    }).join('') || "<div class='glass card'>Belum ada tim.</div>";
+
+    root.querySelectorAll("[data-del]").forEach(b=>{
+      b.onclick = async ()=>{
+        const id=b.getAttribute('data-del');
+        if(confirm('Hapus tim ini?')){ await API.del('esport', id); render(); }
+      };
+    });
+    root.querySelectorAll("[data-edit]").forEach(b=>{
+      b.onclick = async ()=>{
+        const id = b.getAttribute('data-edit');
+        const nama = prompt('Nama tim baru:'); if(!nama) return;
+        const game = prompt('Game (MLBB/PUBG/Free Fire/Valorant/eFootball):') || 'MLBB';
+        await API.update('esport', id, { namaTim:nama, game });
+        render();
+      };
+    });
   }
-  render();
   document.getElementById('btnAddTeam').onclick=async()=>{
     const nama=document.getElementById('tNama').value.trim();
     const game=document.getElementById('tGame').value;
@@ -22,5 +54,6 @@ async function boot_esport(){
     let logoURL=''; if(file) logoURL=await uploadImage(file);
     await API.add('esport',{namaTim:nama,game,logoURL}); render();
   };
+  render();
 }
 </script>

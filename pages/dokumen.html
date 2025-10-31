@@ -1,18 +1,54 @@
 <div class="section-title"><h2>Dokumen Organisasi</h2><button class="btn" id="btnAddDoc">+ Upload</button></div>
-<div class="glass card"><div class="form-row"><label>Judul Dokumen<input id="dJudul"></label><label>Jenis<select id="dJenis"><option>Proposal</option><option>Laporan</option><option>Surat</option></select></label><label>File PDF/Gambar<input id="dFile" type="file" accept="application/pdf,image/*"></label></div></div>
+<div class="glass card">
+  <div class="form-row">
+    <label>Judul Dokumen<input id="dJudul"></label>
+    <label>Jenis<select id="dJenis"><option>Proposal</option><option>Laporan</option><option>Surat</option></select></label>
+    <label>File PDF/Gambar<input id="dFile" type="file" accept="application/pdf,image/*"></label>
+  </div>
+</div>
 <div id="dList" class="grid" style="margin-top:12px"></div>
 <script>
 async function boot_dokumen(){
+  function canManage(){ return ['admin_super','admin_sekretaris','admin_ketua'].includes(window.CURRENT_ROLE); }
   async function render(){
     const arr=await API.list('dokumen',100);
     const root=document.getElementById('dList');
-    root.innerHTML = arr.map(x=>`<div class="glass card"><span class="badge">${x.jenis||'-'}</span><h3>${x.judul||'-'}</h3>${x.fileURL?`<a class='btn' target='_blank' href='${x.fileURL}'>Buka</a>`:''}</div>`).join('') || "<div class='glass card'>Belum ada dokumen.</div>";
+    root.innerHTML = arr.map(x=>{
+      const btns = canManage() ? `<div style="display:flex;gap:8px;margin-top:8px">
+        <button class="btn" data-edit="${x.id}">Edit</button>
+        <button class="btn" data-del="${x.id}">Hapus</button>
+      </div>` : '';
+      return `<div class="glass card">
+        <span class="badge">${x.jenis||'-'}</span>
+        <h3>${x.judul||'-'}</h3>
+        ${x.fileURL?`<a class='btn' target='_blank' href='${x.fileURL}'>Buka</a>`:''}
+        ${btns}
+      </div>`;
+    }).join('') || "<div class='glass card'>Belum ada dokumen.</div>";
+
+    root.querySelectorAll("[data-del]").forEach(b=>{
+      b.onclick = async ()=>{
+        const id=b.getAttribute('data-del');
+        if(confirm('Hapus dokumen ini?')){ await API.del('dokumen', id); render(); }
+      };
+    });
+    root.querySelectorAll("[data-edit]").forEach(b=>{
+      b.onclick = async ()=>{
+        const id = b.getAttribute('data-edit');
+        const judul = prompt('Judul baru:'); if(!judul) return;
+        const jenis = prompt('Jenis (Proposal/Laporan/Surat):') || 'Proposal';
+        await API.update('dokumen', id, { judul, jenis });
+        render();
+      };
+    });
   }
-  render();
   document.getElementById('btnAddDoc').onclick=async()=>{
-    const judul=document.getElementById('dJudul').value.trim(); const jenis=document.getElementById('dJenis').value; const file=document.getElementById('dFile').files[0];
+    const judul=document.getElementById('dJudul').value.trim();
+    const jenis=document.getElementById('dJenis').value;
+    const file=document.getElementById('dFile').files[0];
     let fileURL=''; if(file) fileURL=await uploadImage(file);
     await API.add('dokumen',{judul,jenis,fileURL}); render();
   };
+  render();
 }
 </script>
