@@ -1,0 +1,53 @@
+<div class="section-title"><h2>Profil Saya</h2></div>
+<div class="glass card">
+  <div style="display:flex;gap:16px;align-items:center">
+    <img id="psFoto" src="assets/img/avatar.png" style="width:72px;height:72px;border-radius:50%;object-fit:cover;border:1px solid var(--border)"/>
+    <div>
+      <div style="font-weight:700" id="psNamaDisp">...</div>
+      <small id="psRoleDisp" style="opacity:.8">...</small>
+    </div>
+  </div>
+  <div class="form-row" style="margin-top:12px">
+    <label>Nama Lengkap<input id="psNama"></label>
+    <label>Bidang/Sie<input id="psBidang" placeholder="contoh: Humas & Dokumentasi"></label>
+    <label>WhatsApp<input id="psWA" placeholder="628xx"></label>
+    <label>Bio/Deskripsi<textarea id="psBio" rows="2" placeholder="tentang saya..."></textarea></label>
+    <label>Foto Profil<input id="psFotoFile" type="file" accept="image/*"></label>
+  </div>
+  <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:12px">
+    <button class="btn" id="psSimpan">Simpan Perubahan</button>
+    <button class="btn" onclick="logoutUser()">Keluar</button>
+  </div>
+</div>
+<script>
+async function boot_profil_saya(){
+  const u = firebase.auth().currentUser;
+  if(!u){ location.href='login.html'; return; }
+  const doc = await firebase.firestore().collection('users').doc(u.uid).get();
+  const me = doc.data()||{};
+  document.getElementById('psNamaDisp').textContent = me.name || u.email;
+  document.getElementById('psRoleDisp').textContent = (me.jabatan||'Anggota') + ' • ' + (me.role||'anggota_umum');
+  document.getElementById('psNama').value = me.name || '';
+  document.getElementById('psBidang').value = me.bidang || '';
+  document.getElementById('psWA').value = me.whatsapp || '';
+  document.getElementById('psBio').value = me.bio || '';
+  document.getElementById('psFoto').src = me.photoURL || 'assets/img/avatar.png';
+
+  document.getElementById('psSimpan').onclick = async ()=>{
+    const data = {
+      name: document.getElementById('psNama').value.trim(),
+      bidang: document.getElementById('psBidang').value.trim(),
+      whatsapp: document.getElementById('psWA').value.trim(),
+      bio: document.getElementById('psBio').value.trim()
+    };
+    const file = document.getElementById('psFotoFile').files[0];
+    if(file){ data.photoURL = await uploadImage(file); }
+    await firebase.firestore().collection('users').doc(u.uid).set(data, { merge:true });
+    alert('Profil diperbarui');
+    const photoHeader = document.getElementById('userPhoto'); if(photoHeader) photoHeader.src = data.photoURL || me.photoURL || 'assets/img/avatar.png';
+    const photoSide = document.getElementById('userPhotoSide'); if(photoSide) photoSide.src = data.photoURL || me.photoURL || 'assets/img/avatar.png';
+    const uname = document.getElementById('userName'); if(uname) uname.textContent = data.name || me.name || u.email;
+    const unameSide = document.getElementById('userNameSide'); if(unameSide) unameSide.textContent = data.name || me.name || u.email;
+  };
+}
+</script>
