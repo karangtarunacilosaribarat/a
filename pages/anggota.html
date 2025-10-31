@@ -1,0 +1,17 @@
+<div class="section-title"><h2>Anggota</h2></div>
+<div class="glass card" id="userList">Memuat...</div>
+<script>
+async function boot_anggota(){
+  const root=document.getElementById('userList'); const arr=await API.getUsers();
+  root.innerHTML = '<div class="grid">'+arr.map(u=>`
+    <div class="glass card">
+      <div style="display:flex;gap:10px;align-items:center">
+        <img src="${u.photoURL || 'assets/img/avatar.png'}" style="width:48px;height:48px;border-radius:50%;object-fit:cover;border:1px solid var(--border)"/>
+        <div><strong>${u.name || '-'}</strong><br/><small>${u.jabatan || 'Anggota'} • ${u.role || 'anggota_umum'}</small></div>
+      </div>
+      <div style="margin-top:8px"><small>${u.email||''}</small></div>
+      <div style="display:flex;gap:8px;margin-top:10px"><button class="btn" onclick="navigator.clipboard.writeText('${u.id}')">Salin UID</button></div>
+    </div>
+  `).join('') + '</div>';
+}
+</script>

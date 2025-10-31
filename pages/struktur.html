@@ -1,0 +1,16 @@
+<div class="section-title"><h2>Struktur Organisasi</h2><button class="btn" id="btnAssign">+ Tetapkan Jabatan</button></div>
+<div class="glass card">
+  <div class="form-row">
+    <label>User (UID)<input id="stUID" placeholder="Salin dari daftar anggota"></label>
+    <label>Jabatan<select id="stJabatan"><option>Ketua</option><option>Wakil Ketua</option><option>Sekretaris</option><option>Bendahara</option><option>Koordinator Bidang</option><option>Anggota</option></select></label>
+    <label>Role<select id="stRole"><option>admin_ketua</option><option>admin_wakil</option><option>admin_sekretaris</option><option>admin_bendahara</option><option>admin_bidang</option><option>anggota_umum</option><option>admin_super</option></select></label>
+  </div>
+</div>
+<script>
+async function boot_struktur(){
+  document.getElementById('btnAssign').onclick=async()=>{
+    const uid=document.getElementById('stUID').value.trim(); const jab=document.getElementById('stJabatan').value; const role=document.getElementById('stRole').value;
+    if(!uid) return alert('UID wajib diisi'); await API.setUser(uid,{jabatan:jab,role}); alert('Jabatan & role diperbarui');
+  };
+}
+</script>

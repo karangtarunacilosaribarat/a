@@ -1,0 +1,26 @@
+<div class="section-title"><h2>Tim Esport</h2><button class="btn" id="btnAddTeam">+ Buat Tim</button></div>
+<div class="glass card"><div class="form-row">
+  <label>Nama Tim<input id="tNama"></label>
+  <label>Game
+    <select id="tGame"><option>MLBB</option><option>PUBG</option><option>Free Fire</option><option>Valorant</option><option>eFootball</option></select>
+  </select></label>
+  <label>Logo Tim<input id="tLogo" type="file" accept="image/*"></label>
+</div></div>
+<div id="tList" class="grid" style="margin-top:12px"></div>
+<script>
+async function boot_esport(){
+  async function render(){
+    const arr=await API.list('esport',100);
+    const root=document.getElementById('tList');
+    root.innerHTML = arr.map(x=>`<div class="glass card"><span class="badge">${x.game||'-'}</span><h3>${x.namaTim||'-'}</h3></div>`).join('') || "<div class='glass card'>Belum ada tim.</div>";
+  }
+  render();
+  document.getElementById('btnAddTeam').onclick=async()=>{
+    const nama=document.getElementById('tNama').value.trim();
+    const game=document.getElementById('tGame').value;
+    const file=document.getElementById('tLogo').files[0];
+    let logoURL=''; if(file) logoURL=await uploadImage(file);
+    await API.add('esport',{namaTim:nama,game,logoURL}); render();
+  };
+}
+</script>

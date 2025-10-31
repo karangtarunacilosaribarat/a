@@ -1,0 +1,13 @@
+:root{--accent:#5ac8fa;--violet:#7b2ff7;--glass:rgba(255,255,255,0.08);--border:rgba(255,255,255,0.15);--bg-dark:#0e0e10;--text:#ffffff}
+*{box-sizing:border-box}html,body{margin:0;padding:0}
+body{background:radial-gradient(circle at 20% -10%, #151515 0%, #0e0e10 35%, #050505 100%);color:var(--text);font-family:'Poppins',sans-serif}
+a{color:var(--accent);text-decoration:none}a:hover{text-decoration:underline}
+.container{width:min(1100px,92%);margin:0 auto}
+section{margin:24px 0}
+.hero{min-height:260px;display:grid;align-items:center;padding-top:80px}
+.hero h1{font-size:clamp(1.6rem,3.3vw,2.6rem);margin:0 0 6px}.hero p{opacity:.8;margin:0}
+.grid{display:grid;gap:16px;grid-template-columns:repeat(auto-fill,minmax(220px,1fr))}
+.card{border:1px solid var(--border);border-radius:16px;padding:14px}
+.btn{padding:10px 14px;border-radius:12px;border:1px solid var(--border);background:var(--glass);color:var(--text);cursor:pointer}
+.btn:hover{filter:brightness(1.1)}
+footer{opacity:.75;padding:60px 0 40px}.badge{font-size:.75rem;padding:2px 8px;border:1px solid var(--border);border-radius:999px}

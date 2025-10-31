@@ -1,0 +1,29 @@
+<div class="section-title"><h2>Kelola Kegiatan</h2><button class="btn" id="btnAddEvent">+ Tambah Kegiatan</button></div>
+<div class="glass card"><div class="form-row">
+  <label>Judul<input id="evJudul"></label>
+  <label>Tanggal<input id="evTanggal" type="date"></label>
+  <label>Bidang/Sie
+    <select id="evBidang">
+      <option>-</option><option>Humas & Dokumentasi</option><option>Olahraga & Seni</option><option>Ekonomi & UMKM</option><option>Sosial & Kepemudaan</option><option>Keamanan & Lingkungan</option><option>Pendidikan & Keagamaan</option><option>Esport & Komunitas Digital</option>
+    </select>
+  </label>
+  <label>Deskripsi<textarea id="evDeskripsi" rows="2"></textarea></label>
+</div></div>
+<div id="evList" class="grid" style="margin-top:12px"></div>
+<script>
+async function boot_kegiatan(){
+  async function render(){
+    const arr=await API.list('kegiatan',50);
+    const root=document.getElementById('evList');
+    root.innerHTML = arr.map(x=>`<div class="glass card"><span class="badge">${(x.tanggal||'').toString().slice(0,10)}</span><h3>${x.judul||'-'}</h3><p>${x.deskripsi||''}</p><small>${x.bidang||'-'}</small></div>`).join('') || "<div class='glass card'>Belum ada kegiatan.</div>";
+  }
+  render();
+  document.getElementById('btnAddEvent').onclick=async()=>{
+    const judul=document.getElementById('evJudul').value.trim();
+    const tanggal=document.getElementById('evTanggal').value;
+    const bidang=document.getElementById('evBidang').value;
+    const deskripsi=document.getElementById('evDeskripsi').value;
+    await API.add('kegiatan',{judul,tanggal,bidang,deskripsi}); document.getElementById('evJudul').value='';document.getElementById('evDeskripsi').value=''; render();
+  };
+}
+</script>

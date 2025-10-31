@@ -1,0 +1,3 @@
+(function(){const h=document.getElementById("mainHeader");if(!h)return;function s(){if(window.scrollY>80){h.classList.add("shrunk");h.classList.remove("expanded");}else{h.classList.add("expanded");h.classList.remove("shrunk");}}s();window.addEventListener("scroll",s);})();
+window.Dashboard=window.Dashboard||{};Dashboard.load=async function(p){const m=document.querySelector("#content");if(!m)return;const r=await fetch(`pages/${p}.html`);const t=await r.text();m.innerHTML=t;const f=window[`boot_${p.replace(/-/g,'_')}`];if(typeof f==="function"){f();}};
+window.toIDR=n=>new Intl.NumberFormat('id-ID',{style:'currency',currency:'IDR'}).format(+n||0);

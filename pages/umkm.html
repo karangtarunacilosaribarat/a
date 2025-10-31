@@ -1,0 +1,26 @@
+<div class="section-title"><h2>UMKM Anggota</h2><button class="btn" id="btnAddUMKM">+ Tambah UMKM</button></div>
+<div class="glass card"><div class="form-row">
+  <label>Nama Usaha<input id="uNama"></label>
+  <label>WhatsApp (angka saja)<input id="uWA" placeholder="628xx"></label>
+  <label>Foto Produk<input id="uFoto" type="file" accept="image/*"></label>
+  <label>Deskripsi<textarea id="uDesk" rows="2"></textarea></label>
+</div></div>
+<div id="uList" class="grid" style="margin-top:12px"></div>
+<script>
+async function boot_umkm(){
+  async function render(){
+    const arr=await API.list('umkm',100);
+    const root=document.getElementById('uList');
+    root.innerHTML = arr.map(x=>`<div class="glass card"><h3>${x.nama_usaha||'-'}</h3><p>${x.deskripsi||''}</p><div style="display:flex;gap:8px;align-items:center;margin-top:6px"><a class="btn" target="_blank" href="https://wa.me/${(x.waLink||'').replace(/\D/g,'')}?text=Halo%20saya%20tertarik">WhatsApp</a></div></div>`).join('') || "<div class='glass card'>Belum ada UMKM.</div>";
+  }
+  render();
+  document.getElementById('btnAddUMKM').onclick=async()=>{
+    const nama=document.getElementById('uNama').value.trim();
+    const wa=document.getElementById('uWA').value.trim();
+    const desk=document.getElementById('uDesk').value.trim();
+    const file=document.getElementById('uFoto').files[0];
+    let fotoURL=''; if(file) fotoURL=await uploadImage(file);
+    await API.add('umkm',{nama_usaha:nama,waLink:wa,deskripsi:desk,fotoURL}); document.getElementById('uNama').value='';document.getElementById('uDesk').value=''; render();
+  };
+}
+</script>

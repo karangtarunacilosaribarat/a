@@ -1,0 +1,18 @@
+<div class="section-title"><h2>Berita & Pengumuman</h2><button class="btn" id="btnAddNews">+ Tambah Berita</button></div>
+<div class="glass card"><div class="form-row"><label>Judul<input id="bJudul"></label><label>Foto Sampul<input id="bFoto" type="file" accept="image/*"></label><label>Isi<textarea id="bIsi" rows="3" placeholder="Tulis berita di sini..."></textarea></label></div></div>
+<div id="bList" class="grid" style="margin-top:12px"></div>
+<script>
+async function boot_berita(){
+  async function render(){
+    const arr=await API.list('berita',100);
+    const root=document.getElementById('bList');
+    root.innerHTML = arr.map(x=>`<div class="glass card"><h3>${x.judul||'-'}</h3><p>${(x.isi||'').slice(0,140)}...</p></div>`).join('') || "<div class='glass card'>Belum ada berita.</div>";
+  }
+  render();
+  document.getElementById('btnAddNews').onclick=async()=>{
+    const judul=document.getElementById('bJudul').value.trim(); const isi=document.getElementById('bIsi').value.trim(); const file=document.getElementById('bFoto').files[0];
+    let fotoURL=''; if(file) fotoURL=await uploadImage(file);
+    await API.add('berita',{judul,isi,fotoURL,tanggal:new Date().toISOString()}); render();
+  };
+}
+</script>

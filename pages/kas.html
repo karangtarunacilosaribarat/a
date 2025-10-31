@@ -1,0 +1,21 @@
+<div class="section-title"><h2>Kas & Keuangan</h2><div style="display:flex;gap:8px"><button class="btn" id="btnIn">+ Kas Masuk</button><button class="btn" id="btnOut">- Kas Keluar</button></div></div>
+<div class="glass card"><div class="form-row"><label>Tanggal<input id="kTanggal" type="date"></label><label>Nominal<input id="kNominal" type="number" min="0"></label><label>Keterangan<input id="kKet"></label></div></div>
+<div id="kList" class="glass card" style="margin-top:12px;overflow:auto"><table class="table" id="kTable"><thead><tr><th>Tanggal</th><th>Jenis</th><th>Nominal</th><th>Keterangan</th></tr></thead><tbody></tbody></table></div>
+<script>
+async function boot_kas(){
+  async function render(){
+    const arr=await API.list('kas',200);
+    const tbody=document.querySelector('#kTable tbody');
+    tbody.innerHTML = arr.map(x=>`<tr><td>${(x.tanggal||'').toString().slice(0,10)}</td><td>${x.jenis||'-'}</td><td>${toIDR(x.nominal||0)}</td><td>${x.keterangan||''}</td></tr>`).join('') || "<tr><td colspan='4'>Belum ada data.</td></tr>";
+  }
+  render();
+  document.getElementById('btnIn').onclick=async()=>{
+    const tanggal=document.getElementById('kTanggal').value; const nominal=+document.getElementById('kNominal').value; const keterangan=document.getElementById('kKet').value;
+    await API.add('kas',{tanggal,nominal,jenis:'masuk',keterangan}); render();
+  };
+  document.getElementById('btnOut').onclick=async()=>{
+    const tanggal=document.getElementById('kTanggal').value; const nominal=+document.getElementById('kNominal').value; const keterangan=document.getElementById('kKet').value;
+    await API.add('kas',{tanggal,nominal,jenis:'keluar',keterangan}); render();
+  };
+}
+</script>

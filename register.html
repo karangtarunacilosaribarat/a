@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="id">
+<head><title>Register - Karang Taruna</title>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+<meta name="theme-color" content="#0e0e10"/>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/style.css">
+<link rel="stylesheet" href="assets/css/glass.css">
+<link rel="stylesheet" href="assets/css/header.css">
+</head>
+<body>
+  <header id="mainHeader" class="glass expanded">
+    <div class="header-content">
+      <div style="display:flex;align-items:center;gap:10px"><img src="assets/img/logo.png" class="logo"/><div class="title"><h1>Daftar Anggota</h1><p>Pendaftar pertama otomatis menjadi Super Admin</p></div></div>
+      <div class="header-actions"><a class="btn-glass" href="index.html">Beranda</a></div>
+    </div>
+  </header>
+  <main><div class="container">
+    <form id="registerForm" class="glass card" style="max-width:720px;margin:0 auto" onsubmit="registerUser(event)">
+      <div class="form-row">
+        <label>Nama Lengkap<input type="text" name="name" required></label>
+        <label>Email<input type="email" name="email" required></label>
+        <label>Password<input type="password" name="password" required minlength="6"></label>
+        <label>Bidang/Sie
+          <select name="bidang">
+            <option value="-">-</option>
+            <option>Humas & Dokumentasi</option><option>Olahraga & Seni</option><option>Ekonomi & UMKM</option><option>Sosial & Kepemudaan</option><option>Keamanan & Lingkungan</option><option>Pendidikan & Keagamaan</option><option>Esport & Komunitas Digital</option>
+          </select>
+        </label>
+        <label>Jabatan
+          <select name="jabatan">
+            <option>Anggota</option><option>Koordinator Bidang</option><option>Sekretaris</option><option>Bendahara</option><option>Wakil Ketua</option><option>Ketua</option>
+          </select>
+        </label>
+        <label>Foto Profil<input type="file" name="photo" accept="image/*"></label>
+      </div>
+      <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:12px">
+        <button class="btn" type="submit">Daftar</button><a class="btn" href="login.html">Sudah punya akun</a>
+      </div>
+    </form>
+  </div></main>
+  <script src="scripts/firebase.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+  <script src="scripts/ui.js"></script>
+  <script src="scripts/cloudinary.js"></script>
+  <script src="scripts/crud.js"></script>
+  <script src="scripts/auth.js"></script>
+</body>
+</html>

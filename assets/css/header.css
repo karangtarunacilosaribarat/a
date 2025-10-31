@@ -1,0 +1,20 @@
+#mainHeader{position:fixed;top:0;left:0;right:0;z-index:1000;transition:all .4s ease;overflow:hidden;background:var(--glass);backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}
+#mainHeader.expanded{height:140px;display:flex;align-items:center}
+#mainHeader.shrunk{height:60px;padding-inline:8px}
+#mainHeader .title h1{margin:0;font-size:clamp(1.1rem,2.2vw,1.6rem);transition:all .3s ease}
+#mainHeader.shrunk .title h1{font-size:1.05rem}
+main{margin-top:140px;transition:margin-top .4s ease}
+#mainHeader.shrunk + main{margin-top:60px}
+.header-content{display:flex;align-items:center;gap:12px;justify-content:space-between;width:min(1100px,92%);margin:0 auto}
+.header-actions{display:flex;align-items:center;gap:8px}
+.btn-glass{border:1px solid var(--border);background:var(--glass);color:var(--text);padding:8px 12px;border-radius:12px;cursor:pointer}
+.btn-glass:hover{filter:brightness(1.1)}
+.dashboard{display:grid;gap:18px}
+.section-title{display:flex;align-items:center;justify-content:space-between;margin:6px 0 12px}
+.kpi{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.kpi .card h3{margin:0;font-size:1rem}.kpi .card p{margin:6px 0 0;opacity:.8}
+@media(max-width:900px){.kpi{grid-template-columns:repeat(2,1fr)}}
+.table{width:100%;border-collapse:collapse}.table th,.table td{padding:10px;border-bottom:1px solid var(--border);text-align:left}
+.form-row{display:grid;gap:10px;grid-template-columns:repeat(auto-fit,minmax(180px,1fr))}
+input,select,textarea{padding:10px;border-radius:12px;border:1px solid var(--border);background:rgba(255,255,255,.04);color:var(--text)}
+label{font-size:.85rem;opacity:.85}

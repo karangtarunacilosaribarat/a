@@ -1,0 +1,25 @@
+<div class="section-title"><h2>Ringkasan</h2></div>
+<div class="kpi">
+  <div class="glass card"><h3>Anggota</h3><p id="kpiAnggota">-</p></div>
+  <div class="glass card"><h3>Kegiatan Bulan Ini</h3><p id="kpiKegiatan">-</p></div>
+  <div class="glass card"><h3>UMKM Aktif</h3><p id="kpiUMKM">-</p></div>
+  <div class="glass card"><h3>Kas (saldo)</h3><p id="kpiKas">-</p></div>
+</div>
+<canvas id="chartKas" style="margin-top:16px" height="110"></canvas>
+<script>
+async function boot_home(){
+  const [users, keg, umkm] = await Promise.all([API.getUsers(), API.list('kegiatan', 50), API.list('umkm', 50)]);
+  document.getElementById('kpiAnggota').textContent = users.length;
+  document.getElementById('kpiKegiatan').textContent = keg.length;
+  document.getElementById('kpiUMKM').textContent = umkm.length;
+  const kas = await API.list('kas', 100);
+  const byMonth = {};
+  kas.forEach(x=>{
+    const d = new Date(x.tanggal || Date.now());
+    const key = d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,'0');
+    byMonth[key] = (byMonth[key]||0) + (+x.nominal||0) * (x.jenis==='masuk'?1:-1);
+  });
+  const labels = Object.keys(byMonth).sort(); const data = labels.map(k=>byMonth[k]);
+  if(window.Chart){ const ctx = document.getElementById('chartKas').getContext('2d'); new Chart(ctx,{type:'line',data:{labels,datasets:[{label:'Saldo Bulanan (IDR)',data}]}}); }
+}
+</script>

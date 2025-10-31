@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <title>Dashboard - Karang Taruna</title>
+  
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+<meta name="theme-color" content="#0e0e10"/>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/style.css">
+<link rel="stylesheet" href="assets/css/glass.css">
+<link rel="stylesheet" href="assets/css/header.css">
+
+  <link rel="stylesheet" href="assets/css/dashboard.css">
+</head>
+<body>
+  <header id="mainHeader" class="glass expanded">
+    <div class="header-content">
+      <div style="display:flex;align-items:center;gap:10px">
+        <img src="assets/img/logo.png" class="logo" alt="Logo"/>
+        <div class="title"><h1>Dashboard Karang Taruna</h1><p>Kelola organisasi dan komunitas</p></div>
+      </div>
+      <div class="header-actions profile-widget glass">
+        <img id="userPhoto" src="assets/img/avatar.png" alt="Foto"/>
+        <div><div id="userName">...</div><div id="userRole" style="opacity:.8;font-size:.85rem">...</div></div>
+        <button class="btn-glass" onclick="logoutUser()">Keluar</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    <div class="main-grid">
+      <aside class="sidebar glass">
+        <nav>
+          <a href="#home" data-menu="home" class="active">🏠 Home</a>
+          <a href="#struktur" data-menu="struktur">👥 Struktur</a>
+          <a href="#anggota" data-menu="anggota">📇 Anggota</a>
+          <a href="#kegiatan" data-menu="kegiatan">🗓️ Kegiatan</a>
+          <a href="#umkm" data-menu="umkm">💼 UMKM</a>
+          <a href="#esport" data-menu="esport">🎮 Esport</a>
+          <a href="#kas" data-menu="kas">💰 Kas</a>
+          <a href="#dokumen" data-menu="dokumen">📁 Dokumen</a>
+          <a href="#berita" data-menu="berita">📰 Berita</a>
+          <a href="#pengaturan" data-menu="pengaturan">⚙️ Pengaturan</a>
+        </nav>
+      </aside>
+      <section id="content" class="dashboard"></section>
+    </div>
+  </main>
+
+  <script src="scripts/firebase.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+  <script src="scripts/ui.js"></script>
+  <script src="scripts/role.js"></script>
+  <script src="scripts/cloudinary.js"></script>
+  <script src="scripts/crud.js"></script>
+  <script src="scripts/auth.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="scripts/chart.js"></script>
+</body>
+</html>

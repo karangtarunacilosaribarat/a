@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="id">
+<head><title>Login - Karang Taruna</title>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+<meta name="theme-color" content="#0e0e10"/>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/style.css">
+<link rel="stylesheet" href="assets/css/glass.css">
+<link rel="stylesheet" href="assets/css/header.css">
+</head>
+<body>
+  <header id="mainHeader" class="glass expanded">
+    <div class="header-content">
+      <div style="display:flex;align-items:center;gap:10px"><img src="assets/img/logo.png" class="logo"/><div class="title"><h1>Login Anggota</h1><p>Masuk untuk kelola dashboard</p></div></div>
+      <div class="header-actions"><a class="btn-glass" href="index.html">Beranda</a></div>
+    </div>
+  </header>
+  <main><div class="container">
+    <form id="loginForm" class="glass card" style="max-width:520px;margin:0 auto" onsubmit="loginUser(event)">
+      <div class="form-row">
+        <label>Email<input type="email" name="email" required></label>
+        <label>Password<input type="password" name="password" required></label>
+      </div>
+      <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:12px">
+        <button class="btn" type="submit">Masuk</button><a class="btn" href="register.html">Daftar</a>
+      </div>
+    </form>
+  </div></main>
+  <script src="scripts/firebase.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+  <script src="scripts/ui.js"></script>
+  <script src="scripts/cloudinary.js"></script>
+  <script src="scripts/crud.js"></script>
+  <script src="scripts/auth.js"></script>
+</body>
+</html>
